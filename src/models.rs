@@ -1,5 +1,19 @@
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Display};
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum Action {
+    NavigateToEpicDetail { epic_id: u32 },
+    NavigateToStoryDetail { epic_id: u32, story_id: u32 },
+    NavigateToPreviousPage,
+    CreateEpic,
+    UpdateEpicStatus { epic_id: u32 },
+    DeleteEpic { epic_id: u32 },
+    CreateStory { epic_id: u32 },
+    UpdateStoryStatus { story_id: u32 },
+    DeleteStory { epic_id: u32, story_id: u32 },
+    Exit,
+}
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub enum Status {
@@ -7,6 +21,19 @@ pub enum Status {
     InProgress,
     Resolved,
     Closed,
+}
+
+impl Display for Status {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let status_string = match self {
+            Self::Open => "OPEN",
+            Self::InProgress => "IN PROGRESS",
+            Self::Resolved => "RESOLVED",
+            Self::Closed => "Closed",
+        };
+
+        write!(f, "{status_string}")
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
@@ -48,7 +75,6 @@ impl Story {
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct DBState {
     // This struct represents the entire db state which includes the last_item_id, epics, and stories
-    // TODO: add fields (make sure the fields are public)
     pub last_item_id: u32,
     pub epics: HashMap<u32, Epic>,
     pub stories: HashMap<u32, Story>,
