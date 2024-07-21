@@ -1,22 +1,21 @@
-use std::rc::Rc;
+use std::{any::Any, rc::Rc};
 
 use anyhow::anyhow;
 use anyhow::Result;
-use itertools::Itertools;
 
-use crate::db::Database;
 use crate::db::JiraDatabase;
 use crate::models::Action;
 
 mod page_helpers;
-use page_helpers::*;
+pub use page_helpers::*;
 
 mod prompts;
-use prompts::*;
+pub use prompts::*;
 
 pub trait Page {
     fn draw_page(&self) -> Result<()>;
     fn handle_input(&self, input: &str) -> Result<Option<Action>>;
+    fn as_any(&self) -> &dyn Any;
 }
 
 pub struct HomePage {
@@ -64,6 +63,10 @@ impl Page for HomePage {
             },
         }
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 pub struct EpicDetail {
@@ -79,8 +82,8 @@ impl Page for EpicDetail {
             .get(&self.epic_id)
             .ok_or_else(|| anyhow!("could not find epic!"))?;
 
-        println!("------------------------------ EPIC ------------------------------");
-        println!("  id  |     name     |         description         |    status    ");
+        println!("------------------------------ EPIC -----------------------------");
+        println!("  id  |     name     |         description        |    status    ");
 
         let id = get_column_string(&self.epic_id.to_string(), 6);
         let epic_name: String = get_column_string(&epic.name, 14);
@@ -141,6 +144,10 @@ impl Page for EpicDetail {
             },
         } // match against the user input and return the corresponding action. If the user input was invalid return None.
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 pub struct StoryDetail {
@@ -157,8 +164,8 @@ impl Page for StoryDetail {
             .get(&self.story_id)
             .ok_or_else(|| anyhow!("could not find story!"))?;
 
-        println!("------------------------------ STORY ------------------------------");
-        println!("  id  |     name     |         description         |    status    ");
+        println!("------------------------------ STORY ----------------------------");
+        println!("  id  |     name     |         description        |    status    ");
 
         let id = get_column_string(&self.story_id.to_string(), 6);
         let story_name = get_column_string(&story.name, 14);
@@ -199,6 +206,10 @@ impl Page for StoryDetail {
                 _ => Ok(None),
             },
         }
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
