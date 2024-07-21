@@ -38,46 +38,8 @@ file_path = "/path/to/your/database.json"
 
 Here's a brief overview of the available commands:
 
-### Create an Epic
-
 ```sh
-jira-cli create-epic --name "New Epic" --description "Description of the new epic"
-```
-
-### Create a Story
-
-```sh
-jira-cli create-story --epic-id 1 --name "New Story" --description "Description of the new story"
-```
-
-### Update Issue Status
-
-```sh
-jira-cli update-status --issue-id 2 --status "In Progress"
-```
-
-### Delete an Epic
-
-```sh
-jira-cli delete-epic --epic-id 1
-```
-
-### Delete a Story
-
-```sh
-jira-cli delete-story --epic-id 1 --story-id 2
-```
-
-### List Issues in a Project
-
-```sh
-jira-cli list-issues --project "PROJECT_KEY"
-```
-
-### Search Issues
-
-```sh
-jira-cli search-issues --query "assignee = 'John Doe' AND status = 'Open'"
+./jira-cli
 ```
 
 ## Contributing
